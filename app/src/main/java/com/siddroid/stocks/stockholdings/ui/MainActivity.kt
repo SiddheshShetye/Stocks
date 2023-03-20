@@ -1,7 +1,8 @@
-package com.siddroid.stocks
+package com.siddroid.stocks.stockholdings.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.siddroid.stocks.R
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
