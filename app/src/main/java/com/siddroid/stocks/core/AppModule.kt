@@ -1,11 +1,14 @@
 package com.siddroid.stocks.core
 
+import android.content.Context
+import android.net.ConnectivityManager
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.siddroid.stocks.BuildConfig
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -54,10 +57,30 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun provideRetrofit(okHttpClient: OkHttpClient, gson: Gson):  Retrofit.Builder {
+    fun provideRetrofit(okHttpClient: OkHttpClient, gson: Gson):  Retrofit {
         return Retrofit.Builder().addCallAdapterFactory(RxJavaCallAdapterFactory.create()).addConverterFactory(
             GsonConverterFactory.create(gson))
             .baseUrl(BuildConfig.BASE_URL)
             .client(okHttpClient)
+            .build()
     }
+
+    @Singleton
+    @Provides
+    fun provideNetworkStatusHelper(connectivityManager: ConnectivityManager): NetworkStatusHelper {
+        return NetworkStatusHelper(connectivityManager)
+    }
+    @Provides
+    @Singleton
+    fun provideConnectivityManager(@ApplicationContext context: Context): ConnectivityManager {
+        return context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    }
+
+    @Singleton
+    @Provides
+    fun provideNetworkInterceptor(): NetworkInterceptor {
+        return NetworkInterceptor()
+    }
+
+
 }
